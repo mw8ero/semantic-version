@@ -1,0 +1,105 @@
+name: 'Semantic Versioning'
+
+author: 'Michael Wachter @mw8er'
+
+description: 'Semantic Versioning via label of pull request and gh release, including an optional release.'
+
+inputs:
+  prefix:
+    description: 'The prefix for the version number, e.g. "v" or "v."'
+    required: false
+    default: ''
+  create_release:
+    description: 'Create a release'
+    required: false
+    default: false
+  target_branch:
+    description: 'The target branch'
+    required: false
+    default: 'main'
+
+outputs:
+  version:
+    description: "The next version number"
+    value: ${{ steps.next.outputs.result }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Current version
+      id: current
+      shell: bash
+      run: |
+        version=$(gh release view --json tagName --jq '.tagName' || echo "${PREFIX}0.0.0")
+
+        echo "Current version: $version"
+        echo "version=$version" >> $GITHUB_OUTPUT
+      env:
+        PREFIX: ${{ inputs.prefix }}
+        GH_TOKEN: ${{ github.token }}
+      
+    - name: Next version
+      id: next
+      uses: actions/github-script@v7
+      env:
+        PREFIX: ${{ inputs.prefix }}
+        VERSION: ${{ steps.current.outputs.version }}
+      with:
+        script: |
+          const prefix = process.env.PREFIX
+          var version = process.env.VERSION.replace(prefix, '');
+
+          var version_split = version.split('.');
+          var major = parseInt(version_split[0]) || 0;
+          var minor = parseInt(version_split[1]) || 0;
+          var patch_split = version_split[2].split('-');
+          var patch = parseInt(patch_split[0]) || 0;
+
+          isMajor = false;
+          isMinor = false;
+          isPatch = false;
+          isCandidate = false;
+
+          for (label of context.payload.pull_request.labels) {
+            lowerCaseLabel = label.name.toLowerCase();
+            if (lowerCaseLabel === 'major') {
+              isMajor = true;
+            } else if (lowerCaseLabel === 'minor') {
+              isMinor = true;
+            } else if (lowerCaseLabel === 'patch') {
+              isPatch = true;
+            } else if (lowerCaseLabel === 'candidate') {
+              isCandidate = true;
+            }
+          }
+
+          if (isMajor) {
+            version = (major + 1) + '.0.0';
+          } else if (isMinor) {
+            version = major + '.' + (minor + 1) + '.0';
+          } else if (isPatch) {
+            version = major + '.' + minor + '.' + (patch + 1);
+          } else {
+            version = major + '.' + minor + '.' + patch;
+          }
+
+          if (isCandidate) {
+            version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
+          }
+
+          version = prefix + version;
+
+          console.log('Next version:', version);
+
+          return version;
+        result-encoding: string
+
+    - name: Create release
+      if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
+      id: create_release
+      shell: bash
+      run: gh release create -t "${INPUT_TITLE}" "${INPUT_TITLE}" --generate-notes --target "${TARGET_BRANCH}"
+      env:
+        INPUT_TITLE: ${{ steps.next.outputs.result }}
+        GH_TOKEN: ${{ github.token }}
+        TARGET_BRANCH: ${{ inputs.target_branch }}
