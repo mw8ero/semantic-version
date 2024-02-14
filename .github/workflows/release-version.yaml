@@ -1,0 +1,17 @@
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+permissions:
+  contents: write
+
+jobs:
+  release-version:
+    uses: ./.github/workflows/semantic-version.yaml
+    with:
+      prefix: v
+      create_release: true
+      target_branch: main
