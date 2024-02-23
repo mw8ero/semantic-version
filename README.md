@@ -89,7 +89,7 @@ jobs:
 The file [semantic-version.yaml](.github/workflows/semantic-version.yaml) is a reuseable workflow, which is used by
 
 - [preview-version.yaml](.github/workflows/preview-version.yaml) to get a preview of the next version before closing the pull request.
-- [release-version.yaml](.github/workflows/release-version.yaml)) to get the next version and perform a release after merging a pull request.
+- [release-version.yaml](.github/workflows/release-version.yaml) to get the next version and perform a release after merging a pull request.
 
 ## License
 
