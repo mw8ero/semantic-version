@@ -68,12 +68,8 @@ runs:
             repo: process.env.REPO_NAME,
             pull_number: process.env.PULL_REQUEST_NUMBER
           });
-          data = pull.data;
-          labels = data.labels;
-          console.log(labels);
-          console.log(context.payload.pull_request.labels);
-
-          for (label of context.payload.pull_request.labels) {
+          
+          for (label of pull.data.labels) {
             lowerCaseLabel = label.name.toLowerCase();
             if (lowerCaseLabel === 'major') {
               isMajor = true;
