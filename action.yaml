@@ -70,11 +70,12 @@ runs:
               repo: process.env.REPO_NAME,
               pull_number: process.env.PULL_REQUEST_NUMBER
             });
+            labels = pull.data.labels;
           }          
           catch(err) {
             console.log(err);
           }
-          
+
           for (label of labels) {
             lowerCaseLabel = label.name.toLowerCase();
             if (lowerCaseLabel === 'major') {
