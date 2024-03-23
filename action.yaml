@@ -60,6 +60,8 @@ runs:
           isPatch = false;
           isCandidate = false;
 
+          echo "Current labels: ${{ context.payload.pull_request.labels }}"
+
           for (label of context.payload.pull_request.labels) {
             lowerCaseLabel = label.name.toLowerCase();
             if (lowerCaseLabel === 'major') {
