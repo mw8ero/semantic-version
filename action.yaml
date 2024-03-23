@@ -34,7 +34,6 @@ runs:
 
         echo "Current version: $version"
         echo "version=$version" >> $GITHUB_OUTPUT
-        echo "step current finished"
       env:
         PREFIX: ${{ inputs.prefix }}
         GH_TOKEN: ${{ github.token }}
@@ -45,10 +44,15 @@ runs:
       env:
         PREFIX: ${{ inputs.prefix }}
         VERSION: ${{ steps.current.outputs.version }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OWNER: ${{ github.repository_owner }}
+        REPO_NAME: ${{ github.event.repository.name }}
+        PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}        
       with:
         script: |
-          console.log( "Next version started");
-          console.log( context.payload.pull_request.labels );
+          labels="$(gh api repos/$OWNER/$REPO_NAME/pulls/$PULL_REQUEST_NUMBER --jq '.labels.[].name')"
+          echo "$labels"
+
           const prefix = process.env.PREFIX
           var version = process.env.VERSION.replace(prefix, '');
 
@@ -96,7 +100,7 @@ runs:
 
           return version;
         result-encoding: string
-
+          
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
       id: create_release
