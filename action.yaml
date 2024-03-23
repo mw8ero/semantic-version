@@ -63,6 +63,13 @@ runs:
           isPatch = false;
           isCandidate = false;
 
+          pull = github.rest.pulls.get({
+            owner: process.env.OWNER,
+            repo: process.env.REPO_NAME,
+            pull_number: process.env.PULL_REQUEST_NUMBER
+          });
+          console.log(pull);
+
           for (label of context.payload.pull_request.labels) {
             lowerCaseLabel = label.name.toLowerCase();
             if (lowerCaseLabel === 'major') {
