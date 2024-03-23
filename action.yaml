@@ -47,7 +47,8 @@ runs:
         VERSION: ${{ steps.current.outputs.version }}
       with:
         script: |
-          conslog.log( "Next version started");
+          console.log( "Next version started");
+          console.log( context.payload.pull_request.labels );
           const prefix = process.env.PREFIX
           var version = process.env.VERSION.replace(prefix, '');
 
