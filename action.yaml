@@ -44,15 +44,11 @@ runs:
       env:
         PREFIX: ${{ inputs.prefix }}
         VERSION: ${{ steps.current.outputs.version }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         OWNER: ${{ github.repository_owner }}
         REPO_NAME: ${{ github.event.repository.name }}
         PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}        
       with:
         script: |
-          labels="$(gh api repos/$OWNER/$REPO_NAME/pulls/$PULL_REQUEST_NUMBER --jq '.labels.[].name')"
-          echo "$labels"
-
           const prefix = process.env.PREFIX
           var version = process.env.VERSION.replace(prefix, '');
 
@@ -66,6 +62,13 @@ runs:
           isMinor = false;
           isPatch = false;
           isCandidate = false;
+
+          labels = github.rest.pullrequests.listLabelsOnPullRequest({
+            owner: process.env.OWNER,
+            repo: process.env.REPO_NAME,
+            pull_number: process.env.PULL_REQUEST_NUMBER
+          });
+          consle.log(labels);
 
           for (label of context.payload.pull_request.labels) {
             lowerCaseLabel = label.name.toLowerCase();
