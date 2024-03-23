@@ -68,7 +68,9 @@ runs:
             repo: process.env.REPO_NAME,
             pull_number: process.env.PULL_REQUEST_NUMBER
           });
-          console.log(pull.data);
+          data = pull.data;
+          labels = data.labels;
+          console.log(labels);
           console.log(context.payload.pull_request.labels);
 
           for (label of context.payload.pull_request.labels) {
