@@ -34,7 +34,7 @@ runs:
 
         echo "Current version: $version"
         echo "version=$version" >> $GITHUB_OUTPUT
-        echo "step current finished
+        echo "step current finished"
       env:
         PREFIX: ${{ inputs.prefix }}
         GH_TOKEN: ${{ github.token }}
