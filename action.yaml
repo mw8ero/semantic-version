@@ -63,13 +63,19 @@ runs:
           isPatch = false;
           isCandidate = false;
 
-          pull = await github.rest.pulls.get({
-            owner: process.env.OWNER,
-            repo: process.env.REPO_NAME,
-            pull_number: process.env.PULL_REQUEST_NUMBER
-          });
+          var labels = context.payload.pull_request.labels;
+          try {
+            const pull = await github.rest.pulls.get({
+              owner: process.env.OWNER,
+              repo: process.env.REPO_NAME,
+              pull_number: process.env.PULL_REQUEST_NUMBER
+            });
+          }          
+          catch(err) {
+            console.log(err);
+          }
           
-          for (label of pull.data.labels) {
+          for (label of labels) {
             lowerCaseLabel = label.name.toLowerCase();
             if (lowerCaseLabel === 'major') {
               isMajor = true;
