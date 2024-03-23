@@ -34,6 +34,7 @@ runs:
 
         echo "Current version: $version"
         echo "version=$version" >> $GITHUB_OUTPUT
+        echo "step current finished
       env:
         PREFIX: ${{ inputs.prefix }}
         GH_TOKEN: ${{ github.token }}
@@ -46,6 +47,7 @@ runs:
         VERSION: ${{ steps.current.outputs.version }}
       with:
         script: |
+          conslog.log( "Next version started");
           const prefix = process.env.PREFIX
           var version = process.env.VERSION.replace(prefix, '');
 
@@ -59,6 +61,8 @@ runs:
           isMinor = false;
           isPatch = false;
           isCandidate = false;
+
+          console.log( "Current labels: ${{ context.payload.pull_request.labels }}");
 
           for (label of context.payload.pull_request.labels) {
             lowerCaseLabel = label.name.toLowerCase();
