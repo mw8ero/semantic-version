@@ -63,7 +63,7 @@ runs:
           isPatch = false;
           isCandidate = false;
 
-          pull = github.rest.pulls.get({
+          pull = await github.rest.pulls.get({
             owner: process.env.OWNER,
             repo: process.env.REPO_NAME,
             pull_number: process.env.PULL_REQUEST_NUMBER
