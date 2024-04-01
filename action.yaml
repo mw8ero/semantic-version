@@ -45,8 +45,7 @@ runs:
         PREFIX: ${{ inputs.prefix }}
         VERSION: ${{ steps.current.outputs.version }}
       with:
-        script: |
-          return "1.2.3";
+        script: return "1.2.3";
         result-encoding: string
 
     - name: Create release
