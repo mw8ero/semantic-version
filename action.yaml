@@ -20,10 +20,10 @@ inputs:
 
 outputs:
   version:
-    description: "The next version number"
+    description: "The next version number, format: 'major.minor.patch'"
     value: ${{ steps.next.outputs.result }}
   version_list:
-    description: "The next version number list"
+    description: "The next version number list, format 'major, major.minor, major.minor.patch'"
     value: ${{ steps.next.outputs.result_list }}
 
 runs:
