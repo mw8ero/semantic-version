@@ -21,10 +21,10 @@ inputs:
 outputs:
   version:
     description: "The next version number, i.e. major.minor.patch"
-    value: ${{ steps.next.outputs.result.version }}
+    value: ${{ steps.next.outputs.version }}
   version_list:
     description: "The next version list, i.e. major, major.minor, major.minor.patch"
-    value: ${{ steps.next.outputs.result.version_list }}
+    value: ${{ steps.next.outputs.version_list }}
 
 runs:
   using: "composite"
@@ -123,8 +123,13 @@ runs:
     - name: Print next version
       run: echo "Next version: $VALUE"
       env:
-        VALUE: ${{ steps.next.outputs.result }}
+        VALUE: ${{ steps.next.outputs.version }}
           
+    - name: Print next version
+      run: echo "Next version list: $VALUE"
+      env:
+        VALUE: ${{ steps.next.outputs.version_list }}
+
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
       id: create_release
