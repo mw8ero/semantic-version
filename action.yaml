@@ -103,12 +103,13 @@ runs:
           } else if (isPatch) {
             patch = patch + 1;
           }
+
           version = major + '.' + minor + '.' + patch;
           version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
 
           if (isCandidate) {
             version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
-            version_list = version_list + ',' + version;
+            version_list = version;
           }
 
           version = prefix + version;
