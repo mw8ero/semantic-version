@@ -20,8 +20,11 @@ inputs:
 
 outputs:
   version:
-    description: "The next version number"
-    value: ${{ steps.next.outputs.result }}
+    description: "The next version number, i.e. major.minor.patch"
+    value: ${{ steps.next.outputs.result.version }}
+  version_list:
+    description: "The next version list, i.e. major, major.minor, major.minor.patch"
+    value: ${{ steps.next.outputs.result.version_list }}
 
 runs:
   using: "composite"
@@ -105,6 +108,7 @@ runs:
 
           if (isCandidate) {
             version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
+            version_list = version_list + ',' + version;
           }
 
           version = prefix + version;
@@ -112,8 +116,10 @@ runs:
           console.log('Next version:', version);
           console.log('Next version list:', version);
 
-          return version;
-        result-encoding: string
+          return {
+            version: version
+            version_list: version_list
+            };
           
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
