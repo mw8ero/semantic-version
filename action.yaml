@@ -46,53 +46,7 @@ runs:
         VERSION: ${{ steps.current.outputs.version }}
       with:
         script: |
-          console.log("next version");
-          const prefix = process.env.PREFIX;
-          var version = process.env.VERSION.replace(prefix, '');
-
-          var version_split = version.split('.');
-          var major = parseInt(version_split[0]) || 0;
-          var minor = parseInt(version_split[1]) || 0;
-          var patch_split = version_split[2].split('-');
-          var patch = parseInt(patch_split[0]) || 0;
-
-          isMajor = false;
-          isMinor = false;
-          isPatch = false;
-          isCandidate = false;
-
-          for (label of context.payload.pull_request.labels) {
-            lowerCaseLabel = label.name.toLowerCase();
-            if (lowerCaseLabel === 'major') {
-              isMajor = true;
-            } else if (lowerCaseLabel === 'minor') {
-              isMinor = true;
-            } else if (lowerCaseLabel === 'patch') {
-              isPatch = true;
-            } else if (lowerCaseLabel === 'candidate') {
-              isCandidate = true;
-            }
-          }
-
-          if (isMajor) {
-            version = (major + 1) + '.0.0';
-          } else if (isMinor) {
-            version = major + '.' + (minor + 1) + '.0';
-          } else if (isPatch) {
-            version = major + '.' + minor + '.' + (patch + 1);
-          } else {
-            version = major + '.' + minor + '.' + patch;
-          }
-
-          if (isCandidate) {
-            version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
-          }
-
-          version = prefix + version;
-
-          console.log('Next version:', version);
-
-          return version;
+          return "1.2.3";
         result-encoding: string
 
     - name: Create release
