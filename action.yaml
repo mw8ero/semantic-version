@@ -125,10 +125,10 @@ runs:
       with:
         script: |
           var version_split = process.env.VERSION.split('.');
-          var major = parseInt(version_split[0]) || 0;
-          var minor = parseInt(version_split[1]) || 0;
+          var major = version_split[0] || 0;
+          var minor = version_split[1] || 0;
           var patch_split = version_split[2].split('-');
-          var patch = parseInt(patch_split[0]) || 0;
+          var patch = patch_split[0] || 0;
 
           version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
           if (patch_split.length > 1) {
