@@ -21,10 +21,10 @@ inputs:
 outputs:
   version:
     description: "The next version number, format: 'major.minor.patch'"
-    value: ${{ steps.next.outputs.result }}
+    value: ${{ steps.next.outputs.result.version }}
   version_list:
     description: "The next version number list, format 'major, major.minor, major.minor.patch'"
-    value: ${{ steps.next.outputs.result_list }}
+    value: ${{ steps.next.outputs.result.version_list }}
 
 runs:
   using: "composite"
