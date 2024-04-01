@@ -22,6 +22,9 @@ outputs:
   version:
     description: "The next version number"
     value: ${{ steps.next.outputs.result }}
+  version_list:
+    description: "The next version number list"
+    value: ${{ steps.next.outputs.result_list }}
 
 runs:
   using: "composite"
@@ -44,6 +47,9 @@ runs:
       env:
         PREFIX: ${{ inputs.prefix }}
         VERSION: ${{ steps.current.outputs.version }}
+        OWNER: ${{ github.repository_owner }}
+        REPO_NAME: ${{ github.event.repository.name }}
+        PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}        
       with:
         script: return "1.2.3";
         result-encoding: string
