@@ -104,15 +104,13 @@ runs:
             patch = patch + 1;
           }
 
-          version = major + '.' + minor + '.' + patch;
-          version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
+          version = prefix + major + '.' + minor + '.' + patch;
+          version_list = prefix + major + ',' + prefix + major + '.' + minor + ',' + prefix + major + '.' + minor + '.' + patch;
 
           if (isCandidate) {
             version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
             version_list = version;
           }
-
-          version = prefix + version;
 
           console.log('Next version:', version);
           console.log('Next version list:', version_list);
@@ -121,6 +119,12 @@ runs:
             version: version,
             version_list: version_list
           };
+
+    - name: Print next version
+      run: echo "Next version: ${{ steps.next.outputs.result.version }}"
+    
+    - name: Print next version list
+      run: echo "Next version list: ${{ steps.next.outputs.result.version_list }}"
           
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
