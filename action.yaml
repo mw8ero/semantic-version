@@ -46,7 +46,8 @@ runs:
         VERSION: ${{ steps.current.outputs.version }}
       with:
         script: |
-          const prefix = process.env.PREFIX
+          console.log("next version");
+          const prefix = process.env.PREFIX;
           var version = process.env.VERSION.replace(prefix, '');
 
           var version_split = version.split('.');
