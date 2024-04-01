@@ -115,7 +115,7 @@ runs:
           version = prefix + version;
 
           console.log('Next version:', version);
-          console.log('Next version list:', version);
+          console.log('Next version list:', version_list);
 
           return {
             version: version,
