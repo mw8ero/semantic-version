@@ -117,9 +117,10 @@ runs:
           console.log('Next version:', version);
           console.log('Next version list:', version_list);
 
-          return {"version": version,
-                  "version_list": version_list
-          };
+          return version;
+          # return {"version": version,
+          #         "version_list": version_list
+          # };
           
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
