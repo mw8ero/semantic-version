@@ -21,10 +21,10 @@ inputs:
 outputs:
   version:
     description: "The next version number, i.e. major.minor.patch"
-    value: ${{ steps.next.outputs.version }}
+    value: ${{ steps.next.outputs.result }}
   version_list:
     description: "The next version list, i.e. major, major.minor, major.minor.patch"
-    value: ${{ steps.next.outputs.version_list }}
+    value: ${{ steps.next-list.outputs.result }}
 
 runs:
   using: "composite"
@@ -115,20 +115,29 @@ runs:
           console.log('Next version:', version);
           console.log('Next version list:', version_list);
 
-          return {
-            version: version,
-            version_list: version_list
-          };
+          return version;
+        result-encoding: string
 
-    - name: Print next version
-      run: echo "Next version: $VALUE"
+    - name: Next version list
+      id: next-list
+      uses: actions/github-script@v7
       env:
-        VALUE: ${{ steps.next.outputs.version }}
-          
-    - name: Print next version
-      run: echo "Next version list: $VALUE"
-      env:
-        VALUE: ${{ steps.next.outputs.version_list }}
+        VERSION: ${{ steps.next.outputs.result }}
+      with:
+        script: |
+          var version_split = version.split('.');
+          var major = parseInt(version_split[0]) || 0;
+          var minor = parseInt(version_split[1]) || 0;
+          var patch_split = version_split[2].split('-');
+          var patch = parseInt(patch_split[0]) || 0;
+
+          version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
+          if (patch_split.length > 1) {
+            version_list = version
+          }
+
+          return version_list;
+        result-encoding: string
 
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
