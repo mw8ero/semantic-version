@@ -56,69 +56,69 @@ runs:
           var version = process.env.VERSION.replace(prefix, '');
           var version_list = "";
 
-          # var version_split = version.split('.');
-          # var major = parseInt(version_split[0]) || 0;
-          # var minor = parseInt(version_split[1]) || 0;
-          # var patch_split = version_split[2].split('-');
-          # var patch = parseInt(patch_split[0]) || 0;
+          var version_split = version.split('.');
+          var major = parseInt(version_split[0]) || 0;
+          var minor = parseInt(version_split[1]) || 0;
+          var patch_split = version_split[2].split('-');
+          var patch = parseInt(patch_split[0]) || 0;
 
-          # isMajor = false;
-          # isMinor = false;
-          # isPatch = false;
-          # isCandidate = false;
+          isMajor = false;
+          isMinor = false;
+          isPatch = false;
+          isCandidate = false;
 
-          # var labels = context.payload.pull_request.labels;
-          # console.log('Labels:', labels);
-          # try {
-          #   const pull = await github.rest.pulls.get({
-          #     owner: process.env.OWNER,
-          #     repo: process.env.REPO_NAME,
-          #     pull_number: process.env.PULL_REQUEST_NUMBER
-          #   });
-          #   labels = pull.data.labels;
-          # }          
-          # catch(err) {
-          #   console.log(err);
-          # }
+          var labels = context.payload.pull_request.labels;
+          console.log('Labels:', labels);
+          try {
+            const pull = await github.rest.pulls.get({
+              owner: process.env.OWNER,
+              repo: process.env.REPO_NAME,
+              pull_number: process.env.PULL_REQUEST_NUMBER
+            });
+            labels = pull.data.labels;
+          }          
+          catch(err) {
+            console.log(err);
+          }
 
-          # for (label of labels) {
-          #   lowerCaseLabel = label.name.toLowerCase();
-          #   if (lowerCaseLabel === 'major') {
-          #     isMajor = true;
-          #   } else if (lowerCaseLabel === 'minor') {
-          #     isMinor = true;
-          #   } else if (lowerCaseLabel === 'patch') {
-          #     isPatch = true;
-          #   } else if (lowerCaseLabel === 'candidate') {
-          #     isCandidate = true;
-          #   }
-          # }
+          for (label of labels) {
+            lowerCaseLabel = label.name.toLowerCase();
+            if (lowerCaseLabel === 'major') {
+              isMajor = true;
+            } else if (lowerCaseLabel === 'minor') {
+              isMinor = true;
+            } else if (lowerCaseLabel === 'patch') {
+              isPatch = true;
+            } else if (lowerCaseLabel === 'candidate') {
+              isCandidate = true;
+            }
+          }
 
-          # if (isMajor) {
-          #   major = major + 1;
-          #   minor = 0;
-          #   patch = 0;
-          # } else if (isMinor) {
-          #   minor = minor + 1;
-          #   patch = 0;
-          # } else if (isPatch) {
-          #   patch = patch + 1;
-          # }
-          # version = major + '.' + minor + '.' + patch;
-          # version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
+          if (isMajor) {
+            major = major + 1;
+            minor = 0;
+            patch = 0;
+          } else if (isMinor) {
+            minor = minor + 1;
+            patch = 0;
+          } else if (isPatch) {
+            patch = patch + 1;
+          }
+          version = major + '.' + minor + '.' + patch;
+          version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
 
-          # if (isCandidate) {
-          #   version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
-          # }
+          if (isCandidate) {
+            version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
+          }
 
-          # version = prefix + version;
+          version = prefix + version;
 
-          # console.log('Next version:', version);
-          # console.log('Next version list:', version_list);
+          console.log('Next version:', version);
+          console.log('Next version list:', version_list);
 
           return {
-            "version": version,
-            "version_list": version_list
+            version: version,
+            version_list: version_list
           };
           
     - name: Create release
