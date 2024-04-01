@@ -68,6 +68,17 @@ runs:
 
           var labels = context.payload.pull_request.labels;
           console.log('Labels:', labels);
+          try {
+            const pull = await github.rest.pulls.get({
+              owner: process.env.OWNER,
+              repo: process.env.REPO_NAME,
+              pull_number: process.env.PULL_REQUEST_NUMBER
+            });
+            labels = pull.data.labels;
+          }          
+          catch(err) {
+            console.log(err);
+          }
 
           for (label of labels) {
             lowerCaseLabel = label.name.toLowerCase();
@@ -93,7 +104,7 @@ runs:
             patch = patch + 1;
           }
           version = major + '.' + minor + '.' + patch;
-          version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
+          var version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
 
           if (isCandidate) {
             version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
