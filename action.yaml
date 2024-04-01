@@ -135,6 +135,8 @@ runs:
             version_list = version
           }
 
+          console.log('Next version list:', version_list);
+
           return version_list;
         result-encoding: string
 
