@@ -68,17 +68,6 @@ runs:
 
           var labels = context.payload.pull_request.labels;
           console.log('Labels:', labels);
-          # try {
-          #   const pull = await github.rest.pulls.get({
-          #     owner: process.env.OWNER,
-          #     repo: process.env.REPO_NAME,
-          #     pull_number: process.env.PULL_REQUEST_NUMBER
-          #   });
-          #   labels = pull.data.labels;
-          # }          
-          # catch(err) {
-          #   console.log(err);
-          # }
 
           for (label of labels) {
             lowerCaseLabel = label.name.toLowerCase();
@@ -115,8 +104,9 @@ runs:
           console.log('Next version:', version);
           console.log('Next version list:', version_list);
 
-          return {"version": version,
-                  "version_list": version_list
+          return {
+            "version": version,
+            "version_list": version_list
           };
           
     - name: Create release
