@@ -97,12 +97,9 @@ runs:
             minor = 0;
             patch = 0;
           } else if (isMinor) {
-            # major = major;
             minor = minor + 1;
             patch = 0;
           } else if (isPatch) {
-            # major = major;
-            # minor = minor;
             patch = patch + 1;
           }
           version = major + '.' + minor + '.' + patch;
@@ -121,6 +118,7 @@ runs:
           # return {"version": version,
           #         "version_list": version_list
           # };
+        result-encoding: string
           
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
