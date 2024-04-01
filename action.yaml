@@ -125,7 +125,7 @@ runs:
         VERSION: ${{ steps.next.outputs.result }}
       with:
         script: |
-          var version_split = version.split('.');
+          var version_split = process.env.VERSION.split('.');
           var major = parseInt(version_split[0]) || 0;
           var minor = parseInt(version_split[1]) || 0;
           var patch_split = version_split[2].split('-');
