@@ -113,7 +113,6 @@ runs:
           }
 
           console.log('Next version:', version);
-          console.log('Next version list:', version_list);
 
           return version;
         result-encoding: string
