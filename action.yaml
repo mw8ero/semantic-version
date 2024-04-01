@@ -22,6 +22,9 @@ outputs:
   version:
     description: "The next version number"
     value: ${{ steps.next.outputs.result }}
+  version_list:
+    description: "The next version number list"
+    value: ${{ steps.next.outputs.result_list }}
 
 runs:
   using: "composite"
@@ -90,14 +93,20 @@ runs:
           }
 
           if (isMajor) {
-            version = (major + 1) + '.0.0';
+            major = major + 1;
+            minor = 0;
+            patch = 0;
           } else if (isMinor) {
-            version = major + '.' + (minor + 1) + '.0';
+            # major = major;
+            minor = minor + 1;
+            patch = 0;
           } else if (isPatch) {
-            version = major + '.' + minor + '.' + (patch + 1);
-          } else {
-            version = major + '.' + minor + '.' + patch;
+            # major = major;
+            # minor = minor;
+            patch = patch + 1;
           }
+          version = major + '.' + minor + '.' + patch;
+          version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
 
           if (isCandidate) {
             version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
@@ -106,9 +115,11 @@ runs:
           version = prefix + version;
 
           console.log('Next version:', version);
+          console.log('Next version list:', version_list);
 
-          return version;
-        result-encoding: string
+          return {"version": version,
+                  "version_list": version_list
+          };
           
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
