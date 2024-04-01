@@ -67,6 +67,7 @@ runs:
           isCandidate = false;
 
           var labels = context.payload.pull_request.labels;
+          console.log('Labels:', labels);
           try {
             const pull = await github.rest.pulls.get({
               owner: process.env.OWNER,
