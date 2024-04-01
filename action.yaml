@@ -21,10 +21,10 @@ inputs:
 outputs:
   version:
     description: "The next version number, format: 'major.minor.patch'"
-    value: ${{ steps.next.outputs.result.version }}
-  version_list:
-    description: "The next version number list, format 'major, major.minor, major.minor.patch'"
-    value: ${{ steps.next.outputs.result.version_list }}
+    value: ${{ steps.next.outputs.result }}
+  # version_list:
+  #   description: "The next version number list, format 'major, major.minor, major.minor.patch'"
+  #   value: ${{ steps.next.outputs.result.version_list }}
 
 runs:
   using: "composite"
@@ -115,12 +115,15 @@ runs:
 
           console.log('Next version:', version);
           console.log('Next version list:', version_list);
+        
+          return version;
 
-          return {
-            version: version,
-            version_list: version_list
-          };
-          
+          # return {
+          #   version: version,
+          #   version_list: version_list
+          # };
+        result-encoding: string
+
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
       id: create_release
