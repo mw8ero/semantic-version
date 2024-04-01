@@ -121,10 +121,14 @@ runs:
           };
 
     - name: Print next version
-      run: echo "Next version: ${{ steps.next.outputs.result.version }}"
-    
+      run: echo "Next version: $VALUE"
+      env:
+        VALUE: ${{ steps.next.outputs.result.version }}
+
     - name: Print next version list
-      run: echo "Next version list: ${{ steps.next.outputs.result.version_list }}"
+      run: echo "Next version list: $VALUE"
+      env:
+        VALUE: ${{ steps.next.outputs.result.version_list }}
           
     - name: Create release
       if: ${{ github.event.pull_request.merged == true && inputs.create_release != 'false' && steps.next.outputs.result != steps.current.outputs.version }}
