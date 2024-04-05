@@ -7,7 +7,6 @@ The current version is determined via `gh release view`. From there the next ver
 - *MAJOR* version when you make incompatible API changes
 - *MINOR* version when you add functionality in a backward compatible manner
 - *PATCH* version when you make backward compatible bug fixes
-- *CANDIDATE* for pre-release
 
 See [Semantic Versioning 2.0.0](https://semver.org/).
 

@@ -59,13 +59,11 @@ runs:
           var version_split = version.split('.');
           var major = parseInt(version_split[0]) || 0;
           var minor = parseInt(version_split[1]) || 0;
-          var patch_split = version_split[2].split('-');
-          var patch = parseInt(patch_split[0]) || 0;
+          var patch = parseInt(version_split[2]) || 0;
 
           isMajor = false;
           isMinor = false;
           isPatch = false;
-          isCandidate = false;
 
           var labels = context.payload.pull_request.labels;
           try {
@@ -88,9 +86,6 @@ runs:
               isMinor = true;
             } else if (lowerCaseLabel === 'patch') {
               isPatch = true;
-            } else if (lowerCaseLabel === 'candidate') {
-              isCandidate = true;
-            }
           }
 
           if (isMajor) {
@@ -107,11 +102,6 @@ runs:
           version = prefix + major + '.' + minor + '.' + patch;
           version_list = prefix + major + ',' + prefix + major + '.' + minor + ',' + prefix + major + '.' + minor + '.' + patch;
 
-          if (isCandidate) {
-            version = version + '-' + context.payload.pull_request.head.sha.slice(0, 7);
-            version_list = version;
-          }
-
           console.log('Next version:', version);
 
           return version;
@@ -125,15 +115,11 @@ runs:
       with:
         script: |
           var version_split = process.env.VERSION.split('.');
-          var major = version_split[0] || 0;
-          var minor = version_split[1] || 0;
-          var patch_split = version_split[2].split('-');
-          var patch = patch_split[0] || 0;
+          var major = version_split[0];
+          var minor = version_split[1];
+          var patch = version_split[2];
 
           version_list = major + ',' + major + '.' + minor + ',' + major + '.' + minor + '.' + patch;
-          if (patch_split.length > 1) {
-            version_list = version
-          }
 
           console.log('Next version list:', version_list);
 
