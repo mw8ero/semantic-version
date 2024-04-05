@@ -86,6 +86,7 @@ runs:
               isMinor = true;
             } else if (lowerCaseLabel === 'patch') {
               isPatch = true;
+            }
           }
 
           if (isMajor) {
